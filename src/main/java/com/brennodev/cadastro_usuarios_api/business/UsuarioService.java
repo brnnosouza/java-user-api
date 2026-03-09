@@ -2,6 +2,7 @@ package com.brennodev.cadastro_usuarios_api.business;
 
 import com.brennodev.cadastro_usuarios_api.infrastructure.entity.Usuario;
 import com.brennodev.cadastro_usuarios_api.infrastructure.exceptions.ConflictException;
+import com.brennodev.cadastro_usuarios_api.infrastructure.exceptions.ResourceNotFoundException;
 import com.brennodev.cadastro_usuarios_api.infrastructure.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -38,5 +39,13 @@ public class UsuarioService {
         }catch (ConflictException e){
             throw new ConflictException("Email já cadastrado", e.getCause());
         }
+    }
+    public Usuario buscarUsuarioPorEmail(String email){
+        return usuarioRepository.findByEmail(email).orElseThrow(
+                () -> new ResourceNotFoundException("Email não encontrado" + email));
+    }
+
+    public void detelaUsuarioPorEmail(String email){
+        usuarioRepository.deleteByEmail(email);
     }
 }
